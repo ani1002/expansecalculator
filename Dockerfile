@@ -2,17 +2,18 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-# Copy dependency files
 COPY package*.json ./
 
-# Install all dependencies (including devDeps for Vite)
 RUN npm install
 
-# Copy the rest of the frontend source code
 COPY . .
 
-# Expose Vite's default port
-EXPOSE 5173
+# Build Vite app
+RUN npm run build
 
-# Start Vite with --host to allow external access
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Install static file server
+RUN npm install -g serve
+
+EXPOSE 8080
+
+CMD ["sh", "-c", "serve -s dist -l $PORT"]
