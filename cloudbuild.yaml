@@ -1,5 +1,5 @@
 steps:
-  # Step 1: Build Docker image
+  # Build image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -9,7 +9,7 @@ steps:
         '.'
       ]
 
-  # Step 2: Push Docker image to Google Container Registry
+  # Push image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -17,10 +17,25 @@ steps:
         'gcr.io/$PROJECT_ID/expense-tracker'
       ]
 
-# Store generated Docker image
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run',
+        'deploy',
+        'expense-tracker',
+        '--image',
+        'gcr.io/$PROJECT_ID/expense-tracker',
+        '--region',
+        'asia-south1',
+        '--platform',
+        'managed',
+        '--allow-unauthenticated'
+      ]
+
 images:
   - 'gcr.io/$PROJECT_ID/expense-tracker'
 
-# Fix logging/service account issue
 options:
   logging: CLOUD_LOGGING_ONLY
