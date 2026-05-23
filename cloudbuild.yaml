@@ -1,0 +1,21 @@
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'gcr.io/$PROJECT_ID/expense-tracker',
+        '.'
+      ]
+
+  # Push Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'gcr.io/$PROJECT_ID/expense-tracker'
+      ]
+
+images:
+  - 'gcr.io/$PROJECT_ID/expense-tracker'
